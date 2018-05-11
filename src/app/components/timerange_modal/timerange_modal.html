@@ -1,0 +1,16 @@
+<div class="modal-body-wrapper download-modal">
+    <div class="modal-body">
+        <button class="btn corner-controls" ng-click="cancel()">Close (Esc)</button>
+        
+        <h4>Time range</h4>
+        
+        <datepicker-minimal
+         date="date"
+         config="datePickerConfig">
+        </datepicker-minimal>
+        
+        <p ng-if="hasOffsetDatasets"><i>Datasets with time offsets will retain their offset relative to the above time.</i></p>
+
+        <button class="btn btn-primary" ng-click="ok()">Apply</button>
+    </div>
+</div>

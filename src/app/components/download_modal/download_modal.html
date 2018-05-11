@@ -1,0 +1,19 @@
+<div class="modal-body-wrapper download-modal">
+    <div class="modal-body">
+        <button class="btn corner-controls" ng-click="cancel()">Close (Esc)</button>
+        <h4>Download CSV data</h4>
+        <p>Data for the currently plotted time range will be downloaded.</p>
+        <br>
+        <p ng-if="datasets.length > 1">
+            <a href="javascript:void(0)" ng-click="setAllSelected(true)">Select all</a> | <a href="javascript:void(0)" ng-click="setAllSelected(false)">Deselect all</a>
+        </p>
+        <p ng-repeat="d in datasets track by $index">
+            <label ng-disabled="datasetIsEmpty(d)" title="{{datasetIsEmpty(d) ? 'Cannot download; no data available' : ''}}">
+                <input type="checkbox" ng-model="formData.selectedDatasets[ $index ]" ng-disabled="datasetIsEmpty(d)">
+                {{d.name}}
+                <span ng-if="d.offset != 0">(offset: {{d.offset.replace(' ','')}})</span>
+            </label>
+        </p>
+        <button class="btn btn-primary" type="button" ng-click="downloadSelectedDatasets()" ng-disabled="!someAreSelected()">Download data</button>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="page">
+    <section>
+        <div class="center banner-container">
+            <div class="banner-content">
+                <div test-plot datasets="[datasets.analog1]"></div>
+            </div>
+            <div class="banner-content">
+                <div style="margin: 80px;">
+                    <h1>Lasp-highstock</h1>
+                    <h2>A library designed to adapt Highcharts Stock charts for displaying scientific data</h2>
+                    <div class="prettyprint">
+                        <code>{{html}}</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="center banner-container humble-brag">
+        <h1 class="center">Used By the following websites</h1>
+        <div class="banner-content">
+            <div class="portrait">
+                <img src="images/lisird_portrait.png">
+            </div>
+            <h1 class="center">LISIRD III</h1>
+            <a target="_blank" href="http://lisird-dev:8080/lisird3/" class="mdl-button mdl-button--raised">Check it Out</a>
+        </div>
+        <div class="banner-content">
+            <div class="portrait">
+                <img src="images/webtcad_portrait.png">
+            </div>
+            <h1 class="center">WebTcad</h1>
+            <a target="_blank" href="http://ds-webapp-dev:8080/ops/qscat/webtcad/#/plot/qscat?url=latis%2Fcatalog.json&start=2016-05-12T17:35:23.605Z&end=2016-05-12T21:35:23.605Z&timeFormat=YYYY-DDDD" class="mdl-button mdl-button--raised">Check it Out</a>
+        </div>
+    </section>
+
+    <section class="testplot">
+        <h3>Overplotted analog data with gaps and changing cadence</h3>
+        <div test-plot datasets="[datasets.analog1, datasets.analog2]"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Overplotted analog data with different units and offset time ranges</h3>
+        <div test-plot datasets="[datasets.analog3offset, datasets.analog1]"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Discrete data</h3>
+        <div test-plot datasets="[datasets.discrete1]"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Overplotted discrete data</h3>
+        <div test-plot datasets="[datasets.discrete1, datasets.discrete2]"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Loading data directly and plotting ranges</h3>
+        <div draw-plot class="area-chart" chart="chart" ng-if="rangeMenuOptions" data="rangeData" time-range="rangeTimeRange" menu-options="rangeMenuOptions" plot-obj="plotObj"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Analog data with limit violations</h3>
+        <div test-plot datasets="[datasets.analog3]"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Something other than time as the independent variable</h3>
+        <div test-plot datasets="[datasets.analog4]"></div>
+    </section>
+
+    <section class="testplot">
+        <h3>Event table</h3>
+        <div test-plot datasets="[datasets.string1]"></div>
+    </section>
+</div>

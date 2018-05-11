@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>LASP Highstock</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,500,700" rel="stylesheet" type="text/css">
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="../bower_components/angular-route/angular-route.min.js"></script>
+    <script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="../bower_components/highstock-release/adapters/standalone-framework.js"></script>
+    <script src="../bower_components/highstock-release/highstock.src.js"></script>
+    <script src="../bower_components/highstock-release/highcharts-more.src.js"></script>
+    <script src="../bower_components/highstock-release/modules/exporting.js"></script>
+    <script src="../bower_components/highstock-release/modules/offline-exporting.js"></script>
+    <script src="../bower_components/moment/moment.js"></script>
+    <script src="../bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+    <script src="../bower_components/lasp-datepicker/dist/lasp-datepicker.js"></script>
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../bower_components/lasp-datepicker/dist/lasp-datepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="app/index.css" />
+    <link rel="stylesheet" href="../dist/lasp-highstock.css" />
+  </head>
+  <body ng-app="laspHighstock" ng-strict-di>
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div class="toolbar">
+        <div class="center">
+            <span>LASP</span>
+            <span> | </span>
+            <span><img src="images/icons/highcharts_logo.svg"></span>
+            <span> | </span>
+            <a href='#/'>Home</a>
+            <span> | </span>
+            <a href='#/colors'>Colors</a>
+        </div>
+    </div>
+    <div ng-view></div>
+
+    <script src="app/index.js"></script>
+    <script src="app/mockbackend.js"></script>
+    <script src="../dist/lasp-highstock.js"></script>
+    <script src="app/main/test_plot.directive.js"></script>
+    <script src="app/main/main.controller.js"></script>
+    <script src="app/main/colors.controller.js"></script>
+  </body>
+</html>

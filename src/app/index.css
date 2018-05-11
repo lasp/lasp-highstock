@@ -1,0 +1,251 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:400,700,700italic,400italic);
+
+html, body {
+  margin: 0;
+  padding: 0;
+  margin-bottom: 60px;
+  height: 100%;
+  color: #eeeaea;
+  font-family: 'Roboto',Helvetica,sans-serif;
+}
+
+/************************************************
+Styles specific to test page layout (not necessary
+for users who just want to implment styles for
+this directive)
+************************************************/
+
+.banner {
+    position: relative;
+    background: #508CC8;
+    color: #fff;
+}
+
+.center-margin,
+.center,
+section.testplot > *
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.center {
+    text-align: center;
+}
+
+.page > section {
+    width: 100% !important;
+    padding: 10px 0 20px;
+}
+
+.page > section:nth-child(6n+1) {
+    background-color: #508cc8;
+}
+.page > section:nth-child(6n+3) {
+    background-color: #61BC7B;
+}
+.page > section:nth-child(6n+5) {
+    background-color: #F49952;
+}
+.page > section:nth-child(2n) h3,
+.page > section:nth-child(2n) h1 {
+    color: #333;
+}
+
+
+
+.area-chart {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.area-chart .navigators-hidden {
+    height: 100%;
+}
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+/************************************************
+Styles for this directive (users should copy and
+modify these styles to make the directive fit
+their project)
+************************************************/
+
+.clearfix:after
+{
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.toolbar {
+    box-sizing: border-box;
+
+    min-height: 64px;
+
+    margin: 0;
+    padding: 0;
+
+    background-color: #47475C;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+    z-index: 3;
+}
+
+.toolbar img {
+    height: 64px;
+}
+
+.toolbar span {
+    padding: 0 8px;
+    line-height: 64px;
+    font-size: 1.7em;
+    font-weight: 700;
+}
+
+.banner-container {
+    position: relative;
+    max-width: 1080px;
+    height: 600px;
+    padding: 56px 0 56px 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+.banner-content {
+    position: relative;
+    float: left;
+    width: 50%;
+    padding: 8px;
+}
+
+.humble-brag {
+    margin-bottom: 60px;
+}
+
+.portrait {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.portrait img {
+    width: 100%;
+    height: auto;
+}
+
+.prettyprint {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: left;
+}
+
+[test-plot] {
+    margin-top: 8px;
+    margin-bottom: 64px;
+    border: solid #47475C 1px;
+    border-radius: 4px;
+}
+
+h1,h2,h3 {
+    text-align: left;
+    color: #fff;
+}
+
+h1 {
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 40px;
+    margin-bottom: 15px;
+    margin-top: 15px
+}
+
+h2 {
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 28px;
+    margin-bottom: 25px;
+    margin-top: 15px;
+    max-width: 300px;
+}
+
+h3 {
+    font-size: 3em;
+    padding-top: 32px;
+}
+
+.mdl-button {
+    height: 45px;
+    line-height: 45px;
+    min-width: 140px;
+    padding: 0 30px;
+    background: transparent;
+    border: none;
+    border-radius: 2px;
+    background-color: rgb(255,255,255);
+    color: rgb(183,28,28);
+    position: relative;
+    margin: 0;
+    display: inline-block;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    overflow: hidden;
+    will-change: box-shadow;
+    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mdl-button:hover {
+    text-decoration: none;
+}
+
+.mdl-button--raised {
+    background: rgba(158,158,158, 0.20);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.modal-body-wrapper {
+    color: black;
+}
+
+.color-header {
+    position: relative;
+    color: #fff;
+    background-color: #ff3333;
+    height: 64px;
+}
+
+.color-header h1 {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+}
+
+.dark-theme {
+    background-color: #6c7a89;
+}

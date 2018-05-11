@@ -1,0 +1,83 @@
+{  
+   "P2CHGLIM":{  
+      "metadata":{  
+         "time":{  
+            "length":"23",
+            "alias":"time,DT",
+            "units":"milliseconds since 1970-01-01"
+         },
+         "P2CHGLIM":{  
+            "long_name":"PCU 2 Battery 1 Charge Limit Dsbl/Enbl",
+            "state_conversions":[{
+            	"value": 0,
+            	"state": "D1"
+            }, {
+                "value":1,
+                "state":"ENBL",
+                "desirability":"GOOD"
+            }, {  
+                "value":2,
+                "state":"DSBL",
+                "desirability":"BAD"
+            }, {
+            	"value": 3,
+            	"state": "OTHER"
+            }, {
+            	"value": 4,
+            	"state": "UNKNOWN"
+            }, {  
+                "value":5,
+                "state":"META",
+                "desirability":"CAUTION"
+            }, {  
+                "value":6,
+                "state":"E1"
+            }, {  
+                "value":7,
+                "state":"E2"
+            }, {  
+                "value":8,
+                "state":"E3"
+            }],
+            "tlmId":"856",
+            "alias":"value",
+            "full_resolution":"true"
+         },
+         "state":{  
+
+         }
+      },
+      "parameters":[  
+         "time",
+         "P2CHGLIM",
+         "state"
+      ],
+      "data":[  
+         [  
+            1454181517203,
+            7,
+            "E2"
+         ],
+         [  
+            1455226927200,
+            7,
+            "E2"
+         ],
+         [  
+            1455322256173,
+            7,
+            "E2"
+         ],
+         [  
+            1456022256173,
+            2,
+            "DSBL"
+         ],
+         [  
+            1457622256173,
+            2,
+            "DSBL"
+         ]
+      ]
+   }
+}

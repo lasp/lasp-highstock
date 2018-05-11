@@ -1,0 +1,19 @@
+<div class="modal-body events-modal">
+    <h3>Event details</h3>
+    <p>
+        <b>Type:</b> {{$ctrl.eventDetails.type.label}}
+        <span ng-if="$ctrl.eventDetails.type.label.toLowerCase() !== $ctrl.eventDetails.type.name.toLowerCase()">({{$ctrl.eventDetails.type.name}})</span>
+    </p>
+    <p ng-if="$ctrl.eventDetails.end">
+        <b>Start:</b> {{$ctrl.eventDetails.startFormatted}}<br />
+        <b>End:</b> {{$ctrl.eventDetails.endFormatted}}
+    </p>
+    <p ng-if="!$ctrl.eventDetails.end">
+        <b>Time:</b> {{$ctrl.eventDetails.startFormatted}}
+    </p>
+    <br>
+    <h4>Properties</h4>
+    <p ng-repeat="(key, value) in $ctrl.eventDetails.info" ng-if="value.length > 0">
+        <b>{{key}}:</b> {{value}}
+    </p>
+</div>

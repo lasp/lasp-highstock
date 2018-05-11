@@ -1,0 +1,739 @@
+[draw-plot] {
+    padding: 0;
+    position: relative;
+    
+    color: #000;
+    transition: border .2s ease-in-out;
+}
+
+[draw-plot] > div {
+    border-radius: 4px;
+}
+
+/*****************************************************
+* FUNCTIONAL STYLES
+*****************************************************/
+.unselectable {
+  user-select: none;
+}
+
+.truncate {
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flex-container-row {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-content: stretch;
+    align-items: stretch;
+}
+
+.flex {
+    flex: 1 1 0%; 
+}
+
+.flex-grow {
+    flex: 1 1 100%;
+}
+  
+.flex-nogrow {
+    flex: 0 1 auto;
+}
+  
+.flex-auto {
+    flex: 1 1 auto;
+}
+
+.flex-noshrink {
+    flex: 1 0 auto;
+}
+
+.flex-grow,
+.flex-nogrow,
+.flex-auto,
+.flex-noshrink {
+    box-sizing: border-box;
+}
+
+.arrow {
+    background: transparent url(../../images/icons/ic_chevron_right_36px.svg) no-repeat right center;
+    background-size: 100% auto;
+    display: inline-block;
+    height: 100%;
+    width: 24px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transform: translate(0, 0);
+    transition: 0.4s ease-in-out;
+}
+
+li:hover > label > .arrow,
+span:hover > .arrow {
+    transform: translate(6px, 0);
+}
+
+.reverse {   
+    transform: rotate(180deg);
+}
+
+/*****************************************************
+* MODALS
+*****************************************************/
+
+.download-modal label[disabled] {
+    color: #aaa;
+}
+
+.corner-controls {
+    float: right;
+}
+
+/*****************************************************
+* PLOT HEADER
+*****************************************************/
+.plot-header {
+    height: 36px;
+    width: 100%;
+    background: #789;
+    border-radius: 4px 4px 0 0;
+    color: white;
+    cursor: move;
+}
+
+.plot-header.use-global-settings:before {
+    position: absolute;
+    display: block;
+    content: '';
+    background: #5a5a5a;
+    width: 36px;
+    height: 36px;
+    top: 0;
+    left: 0;
+    border-top-left-radius: inherit;
+}
+
+.collapsed .plot-header.use-global-settings:before {
+    display: none;
+}
+
+.chart-title {
+    padding: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-desc {
+    padding-left: 8px;
+    color: #adbac8;
+}
+
+.noti-bubble {
+    height: 18px;
+    padding: 1px 2px;
+    flex: 0 1 auto;
+    
+    font-weight: bold;
+    font-size: 0.75em;
+    
+    border-radius: 0 0 30px 30px;
+    box-shadow: 1px 1px 1px #808080;
+    background-color: #F00;
+    color: #FFF;
+}
+
+.noti-bubble.yellow {
+    color: black;
+    background-color: yellow;
+    padding: 1px 2px;
+}
+
+/*****************************************************
+* HEADER BUTTONS
+*****************************************************/
+.header-button-group {
+    padding: 6px 2px;
+}
+.header-button {
+    float: left;
+    margin: 0 2px;
+    
+    width: 24px;
+    height: 24px;
+    
+    filter: alpha(opacity=70);
+    opacity: 0.7;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-position: center center;
+    cursor: pointer;
+}
+.header-button[disabled],
+.header-button[disabled]:hover {
+    filter: alpha(opacity=25);
+    opacity: 0.25;
+    cursor: default;
+}
+.header-button:hover {
+    opacity: 1;
+    transition: .1s all ease-in-out;
+}
+
+.header-button.disabled,
+.header-button.disabled:hover {
+    filter: alpha(opacity=30);
+    opacity: 0.3;
+    cursor: default;
+}
+.header-button-small {
+    margin: 0;
+    width: 18px;
+    background-size: 18px 18px;
+}
+
+.plusminus-btn {
+    background-image: url(../../images/icons/icon-collapse.png);
+    transition: .16s all ease-in-out;
+}
+.plusminus-btn.collapsed        {
+    background-image: url(../../images/icons/icon-expand.png);
+    transform: rotate(90deg);
+}
+
+/* Load Images for various buttons */
+.close-btn                      { background-image: url(../../images/icons/icon-close.png) }
+.download-btn                   { background-image: url(../../images/icons/ic_file_download_24px.svg); }
+.metadata-btn                   { background-image: url(../../images/icons/ic_info_24px.svg) }
+.zoom-in-btn                    { background-image: url(../../images/icons/ic_add_24px.svg) }
+.zoom-out-btn                   { background-image: url(../../images/icons/ic_remove_24px.svg) }
+.pan-left-btn                   { background-image: url(../../images/icons/ic_chevron_left_36px_white.svg) }
+.pan-right-btn                  { background-image: url(../../images/icons/ic_chevron_right_36px_white.svg) }
+.undo-zoom                      { background-image: url(../../images/icons/ic_undo_24px.svg) }
+.zoom-menu                      { background-image: url(../../images/icons/ic_arrow_drop_down_24px.svg) }
+.timerange-btn                  { background-image: url(../../images/icons/icon-datetime.png) }
+.increase-resolution-btn        { background-image: url(../../images/icons/ic_inc_res_24px.svg) }
+.filter-btn                     { background-image: url(../../images/icons/filter.svg) }
+.active-filter-btn              { background-image: url(../../images/icons/filter_active.svg) }
+
+/*****************************************************
+* DROP DOWN MENUS
+*****************************************************/
+.button-group {
+    position: relative;
+    float: left;
+    overflow: visible;
+}
+
+.fixed-zoom-group {
+    height: 24px;
+    outline: 0;
+    border-right: 1px solid rgba(255,255,255,0.3);
+    padding: 0;
+    margin: 0 4px 0 0;
+}
+
+.dropdown-group li {
+    height: 52px;
+    width: 140px;
+    line-height: 52px;
+    padding: 0 16px;
+}
+
+.filter-options-group {
+    width: 163px;
+    padding: 12px;
+    
+    color: #000;
+    overflow: hidden;
+}
+
+.filter-button-group .dropdown {
+    border-radius: 0 0 4px 4px;
+}
+
+.filter-button-group input[type="number"] {
+    width: 100%;
+}
+
+.filter-options-group label {
+    display: block;
+}
+.filter-options-group .filter-details {
+    margin: 5px 0 10px 10px;
+}
+.filter-options-group .filter-details label {
+    font-weight: normal;
+}
+
+.filter-options-group button {
+    width: 100%;
+    margin-top: 12px;
+}
+
+.filter-options-group input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.filter-options-group .overplot-filter-note {
+    font-size: 0.9em;
+    line-height: 1.2em;
+}
+
+.filter-button-group > .dropdown {
+    left: -79px;
+}
+.download-button-group > .dropdown {
+    left: -54px;
+}
+
+.dropdown {
+    color: black;
+    box-shadow: 0px 2px 5px 1px rgba(0, 0, 0, 0.26);
+    position: absolute;
+    left: -1px;
+    top: 100%;
+    z-index: 1;
+    margin-top: 5px;
+    
+    background-color: white;
+    text-overflow:ellipsis;
+    cursor: pointer;
+}
+
+/*****************************************************
+* PLOT MENU STYLES
+*****************************************************/
+.plot-menu-btn {
+    position: relative;
+    float: left;
+    cursor: pointer;
+
+    width: 27px;
+    height: 27px;
+    padding: 4px;
+    box-sizing: content-box;
+
+    background: url(../../images/icons/ic_menu_24px.svg) no-repeat center center;
+
+    transition: .16s all ease;
+}
+
+.plot-menu {
+    position: absolute;
+    width: 256px;
+    z-index: 500;
+    top: 36px;
+    background-color: white;
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    clear: both;
+    text-align: left;
+}
+
+.plot-menu ul,
+.button-group ul {
+    background-color: white;
+    margin-bottom: 0;
+    padding-left: 0;
+    display: block;
+}
+
+.plot-menu li,
+.button-group li {
+    display: block;
+    list-style: none;
+    position: relative;
+    clear: both;
+    height: 52px;
+}
+
+.plot-menu li:hover,
+.dropdown-group ul li:hover {
+    background-color: rgba(158,158,158,0.2);
+    cursor: pointer;
+}
+
+/* submenu of any level */
+.plot-menu ul ul {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 100%;
+    z-index: 400;
+    background-color: white;
+    box-shadow: 0px 2px 5px 0 rgba(0, 0, 0, 0.26);
+    clear: both;
+}
+
+.plot-menu ul ul.open-left {
+    left: -97%; /* not 100% so that it doesn't perfectly overlap with a previous-level menu */
+}
+
+.plot-menu li:hover > ul {
+    display: block;
+}
+
+.plot-menu label {
+    width: 100%;
+    padding: 0 16px;
+    margin-bottom: 0;
+    height: 52px;
+    line-height: 52px;
+    cursor: pointer;
+    text-align: right;
+}
+
+.plot-menu label .half-label {
+    width: 50%;
+    position: relative;
+    float: left;
+}
+
+.plot-menu label > span,
+.plot-menu .half-label > span {
+    vertical-align: middle;
+    margin-right: 5px;
+    float: left;
+}
+
+.plot-menu .plot-list > li > label {
+    text-align: left;
+}
+
+.plot-menu .plot-list > li > label > span {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: inherit;
+    font-weight: normal;
+    line-height: normal;
+    float: none;
+}
+
+.plot-menu .plot-list > li > label .arrow {
+    position: absolute;
+    right: 16px;
+    top: 0;
+}
+
+.plot-menu .plot-list .desc {
+    opacity: 0.45;
+}
+
+.plot-menu .dataset-selection label > span {
+    padding-right: 16px;
+}
+
+.plot-menu .dataset-selection input[type=checkbox],
+.plot-menu .dataset-selection input[type=radio] {
+    position: absolute;
+    right: 16px;
+    top: 0;
+    line-height: 100%;
+    margin-top: -0.5em;
+    top: 50%;
+}
+
+.plot-menu input {
+    position: absolute;
+    top: 0;
+    right: 11px;
+    margin-top: 0;
+}
+
+.plot-menu input[type="number"],
+.plot-menu input[type="text"] {
+    margin-top: 10px;
+    line-height: 28px;
+    padding-left: 4px;
+}
+
+.plot-menu input[type="radio"],
+.plot-menu input[type="checkbox"] {
+    vertical-align: middle;
+    position: relative;
+    right: 0;
+}
+
+.plot-menu li.separator {
+    height: 1px;
+    border-top: 1px solid #ccc;
+}
+
+.plot-menu li.dark-menu {
+    background-color: #444;
+    color: white;
+}
+
+.plot-menu li.dark-menu:hover {
+    background-color: #5a5a5a;
+}
+
+.plot-menu li.disabled {
+    filter: alpha(opacity=25);
+    opacity: 0.25;
+}
+
+.plot-menu li.disabled:hover {
+    background-color: inherit;
+}
+
+.plot-menu li.disabled label {
+    cursor: default;
+}
+
+.plot-menu li.disabled:hover > ul {
+    display: none;
+}
+
+.plot-menu li.disabled input {
+    display: none;
+}
+
+.plot-menu label.y-axis-scaling .scaling-error {
+    line-height: 18px;
+    text-align: left;
+    padding-right: 5em;
+    padding-top: 8px;
+}
+
+.plot-menu label.y-axis-scaling button {
+    position: absolute;
+    right: 16px;
+    top: 10px;
+}
+
+.plot-menu .gap-threshold-input {
+    width: 25%;
+}
+
+.plot-menu span.hide-overflow {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: left;
+}
+
+/*****************************************************
+* SMALL FORMAT BOTTOM MENU
+*****************************************************/
+.more-options-button {
+    position: absolute;
+    left: 0px;
+    width: 30px;
+    bottom: 0;
+    height: 36px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+
+    background-color: #789;
+    
+    cursor: pointer;
+    z-index: 3;
+}
+
+.more-options-button .arrow{
+    color: white;
+    padding-left: 4px;
+    right: 0;
+    background-image: url(../../images/icons/ic_chevron_right_36px_white.svg);
+}
+
+.bottom-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    background-color: #789;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.bottom-menu .dropdown {
+    bottom: 100%;
+    top: auto;
+    margin-bottom: 5px;
+}
+
+.bottom-menu .download-button-group .dropdown {
+    left: -110px;
+}
+/*****************************************************
+* CSS MODIFIERS FOR HIGHCHARTS ELEMENTS
+*****************************************************/
+
+.highcharts-legend {
+    font-family: "Courier New", "Courier", "Lucida Sans Unicode", monospace;
+}
+
+.no-data-buttons {
+    margin-top: 2em;
+}
+
+.no-data-buttons button:nth-child(n+2) {
+    margin-left: 1em;
+}
+
+.highcharts-container {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* overriding the behavior of .ng-hide for highstock charts, because setting display: none on a chart while it's
+ * loading can cause some funky element placement issues.
+ */
+.lasp-chart.ng-hide {
+    display: block !important;
+    visibility: hidden;
+    height: 1px !important;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.event-modal * {
+    color: black;
+}
+.event-modal h3 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+}
+.events-plot-band {
+    fill: #000;
+}
+.highcharts-yaxis-grid.events-y-axis path {
+    stroke: #333;
+}
+.highcharts-yaxis-grid.events-y-axis path:first-child {
+    stroke-width: 0;
+}
+
+
+/*****************************************************
+* HTML-based content inside the plot frame
+*****************************************************/
+
+.frame-contents {
+    position: relative;
+    overflow: hidden;
+    text-align: left;
+    line-height: normal;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.frame-contents .overlay-container {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    text-align: center;
+}
+
+.frame-contents .overlay-container > div {
+    margin: auto;
+}
+
+.frame-contents .loading-bar-wrapper {
+    margin-bottom: 5px;
+    width: 208px;
+    height: 13px;
+    position: relative;
+    border-radius: 3px;
+    border: 1px solid #aaa;
+    
+    background-image: url(../../images/ajax-loader-bar.gif);
+    background-repeat: no-repeat;
+    background-position: -7px -4px;
+}
+
+.frame-contents .loading-bar-mask {
+    position: absolute;
+    width: 100%; /* width is determined by load percent */
+    height: 100%;
+    right: 0;
+    top: 0;
+    transition: width 0.15s;
+    background: rgba(255,255,255,0.8);
+    border-radius:  0 3px 3px 0;
+    border-left: 1px solid #bbb;
+}
+
+.frame-contents .loading-kb {
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+    font-size: 10px;
+    font-weight: normal;
+    padding-left: 2px;
+    color: rgba(0,0,0,0.5);
+}
+
+/*****************************************************
+* EVENT TABLE
+*****************************************************/
+
+.event-table table {
+    width: 100%;
+}
+
+.event-table tr:nth-child(even) {
+    background: #f0f0f0;
+}
+
+.event-table td {
+    padding: 0.3em 0.6em;
+    white-space: nowrap;
+}
+
+.event-table .table-container {
+    overflow: auto;
+}
+
+
+/*****************************************************
+* DARK COLOR THEME
+*****************************************************/
+
+.color-theme-light {
+    background: white;
+}
+
+.color-theme-dark {
+    background: black;
+}
+
+.color-theme-dark .event-table {
+    color: white;
+}
+
+.color-theme-dark .event-table tr:nth-child(even) {
+    background: #202020;
+}
+
+.color-theme-dark .frame-contents .overlay-container {
+    background: black;
+    color: white;
+}
+
+.color-theme-dark .frame-contents .loading-bar-mask {
+    background: rgba(0,0,0,0.8);
+    border-left: none
+}
+
+.color-theme-dark .frame-contents .loading-kb {
+    color: rgba(255,255,255,0.5);
+}
+.color-theme-dark .events-plot-band {
+    fill: #fff;
+}
+.color-theme-dark .highcharts-yaxis-grid.events-y-axis path {
+    stroke: #ddd;
+}

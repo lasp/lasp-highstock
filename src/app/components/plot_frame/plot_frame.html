@@ -1,0 +1,564 @@
+<div class="unselectable" ng-class="{'collapsed': uiOptions.collapsed, 'color-theme-light': uiOptions.colorTheme == 'light', 'color-theme-dark': uiOptions.colorTheme == 'dark' }" ng-click="closeAll()">
+    <!-- Plot header -->
+    <div class="plot-header flex-container-row" ng-class="{'use-global-settings': menuOptions.menuDisabled}" sv-handle>
+        <!-- Menu Button -->
+        <div class="plot-menu-btn flex-nogrow" ng-hide="uiOptions.collapsed" ng-click="togglePlotMenu($event)"></div>
+
+        <!-- Chart Title and Description -->
+        <div class="chart-title flex-container-row flex" title="{{name}} - {{desc}}" ng-hide="error=='badFormat'">
+            <span class="truncate">{{name}}</span>
+            <span class="chart-desc truncate flex">{{desc}}</span>
+        </div>
+
+        <!-- Limit Violation Notifications -->
+        <span class="noti-bubble flex"
+          ng-if="redViolations > 0"
+          title="{{redViolations}} {{redViolations === 1 ? 'point' : 'points'}} within red limit areas">
+            {{redViolations}}
+        </span>
+        <span class="noti-bubble yellow flex"
+          ng-if="yellowViolations > 0"
+          title="{{yellowViolations}} {{yellowViolations === 1 ? 'point' : 'points'}} within yellow limit areas">
+            {{yellowViolations}}
+        </span>
+
+        <!-- Data Modifier Buttons -->
+        <div class="flex-nogrow header-button-group" ng-mousedown="$event.stopPropagation()"><!-- stopPropagation prevents dragging the plot when trying to click buttons -->
+            <div header-button-group class="button-group" ng-show="elementWidth > 620 && !uiOptions.collapsed"></div>
+            <div class="header-button plusminus-btn" ng-class="{'collapsed': uiOptions.collapsed}" ng-click="setUiOptions({collapsed: !uiOptions.collapsed})" title="Toggle plot collapse"></div>
+            <div class="header-button close-btn" ng-click="removePlot()" title="Remove plot"></div>
+        </div>
+    </div>
+
+    <!-- Plot Main Menu -->
+    <div plot-menu class="plot-menu" open="plotMenuOpen" menu-btn="plotMenuBtn">
+        <ul>
+            <!-- Global Settings Switch -->
+            <li class="ui-menu-disable dark-menu">
+                <label>
+                    <span>{{uiOptions.disableMenuLabelText}}</span>
+                    <input type="checkbox"
+                      ng-checked="menuOptions.menuDisabled"
+                      ng-click="setMenuOptions({menuDisabled: !menuOptions.menuDisabled})">
+                </label>
+            </li>
+            <!-- Datasets menu items -->
+            <li class="ui-menu-datasets" ng-show="datasetType !== DatasetTypes.EVENT_TABLE && (plotList || showChangeDatasetsMenuItem())">
+                <label>
+                    <span>Datasets</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <!-- Add new dataset -->
+                    <li class="ui-menu-datasets-add" ng-show="showChangeDatasetsMenuItem()">
+                        <label ng-click="onChangeDatasetsClicked()">
+                            <span>Add/remove/change datasets&hellip;</span>
+                        </label>
+                    </li>
+                    <!-- Plot Splitter -->
+                    <li class="ui-menu-datasets-split" ng-show="plotList" ng-class="{disabled: !isOverplot()}">
+                        <label ng-click="splitDatasets()">
+                            <span>Split into separate plots</span>
+                        </label>
+                    </li>
+                    <!-- Plot Combiner -->
+                    <li class="ui-menu-datasets-combine" ng-show="plotList" ng-class="{'disabled': !plotList.some( canCombine )}">
+                        <label>
+                            <span>Combine plot with</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul class="plot-list scrolling-menu">
+                            <li ng-repeat="(i, plot) in plotList" ng-if="canCombine( plot )">
+                                <label title="{{plot.plotObj.name}} &#013; {{plot.plotObj.desc}}" ng-click="absorbDatasetsOf( plot )">
+                                    <span>
+                                        <span>{{plot.plotObj.name}}</span><br />
+                                        <span class="desc">{{plot.plotObj.desc}}</span>
+                                    </span>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="ui-menu-overplot" ng-class="{disabled: !isOverplot()}">
+                <label>
+                    <span>Overplot settings</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <!-- limits selection for overplots -->
+                    <li class="ui-menu-limits-selection" ng-class="{disabled: !enableLimitsSelection || !menuOptions.view.limits}" title="{{menuOptions.view.limits ? '' : 'Limits are currently hidden. Turn on limits via [View->Limits] to enable this option.'}}">
+                        <label>
+                            <span>Show limits for:</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul class="plot-list scrolling-menu dataset-selection">
+                            <li ng-repeat="(i, ds) in datasets">
+                                <label title="{{ds.name}} &#013; {{ds.desc}}">
+                                    <span>
+                                        <span>{{ds.name}}</span><br />
+                                        <span class="desc">{{ds.desc}}</span>
+                                        <input type="radio"
+                                        ng-checked="menuOptions.selectedLimitsIndex === i"
+                                        ng-click="setMenuOptions({selectedLimitsIndex:i})">
+                                    </span>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <!-- x-axis selection for overplots with offset datasets -->
+                    <li class="ui-menu-xaxis-selection" ng-class="{disabled: !hasOffsetDatasets()}">
+                        <label>
+                            <span>Show x-axis for:</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul class="plot-list scrolling-menu dataset-selection">
+                            <li ng-repeat="(i, ds) in datasets">
+                                <label title="{{ds.name}} &#013; {{ds.desc}}">
+                                    <span>
+                                        <span>{{ds.name}}</span><br />
+                                        <span class="desc">Offset: {{ds.offset ? ds.offset.replace(' ','') : 'none'}}</span>
+                                        <input type="radio"
+                                        ng-checked="menuOptions.selectedXAxisIndex === i"
+                                        ng-click="setMenuOptions({selectedXAxisIndex:i})">
+                                    </span>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+
+
+            <li class="separator"></li>
+
+            <!-- View Options Menu -->
+            <li class="ui-menu-view" ng-show="datasetType !== DatasetTypes.EVENT_TABLE" ng-class="{'disabled': menuOptions.menuDisabled}">
+                <label>
+                    <span>View</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <li class="ui-menu-view-navigator">
+                        <label>
+                            <span>Navigator</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.view.navigator"
+                              ng-click="setMenuOptions({view:{navigator:!menuOptions.view.navigator}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-view-scrollbar">
+                        <label>
+                            <span>Scroll bar</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.view.scrollbar"
+                              ng-click="setMenuOptions({view:{scrollbar:!menuOptions.view.scrollbar}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-view-limits" ng-class="{'disabled': datasetType === DatasetTypes.DISCRETE}">
+                        <label>
+                            <span>Limit areas</span>
+                            <input type="checkbox"
+                              ng-disabled="datasetType === DatasetTypes.DISCRETE"
+                              ng-checked="menuOptions.view.limits"
+                              ng-click="setMenuOptions({view:{limits:!menuOptions.view.limits}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-view-limit-violation-flags">
+                        <label>
+                            <span>Limit violation coloring</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.view.limitViolationFlags"
+                              ng-click="setMenuOptions({view:{limitViolationFlags:!menuOptions.view.limitViolationFlags}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-view-events" ng-class="{'disabled': !uiOptions.eventsURL}">
+                        <label>
+                            <span>Events</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.view.events"
+                              ng-click="setMenuOptions({view:{events:!menuOptions.view.events}})"
+                              ng-disabled="!uiOptions.eventsURL">
+                        </label>
+                    </li>
+                    <li class="ui-menu-view-eventtypes" ng-class="{disabled: !menuOptions.view.events}">
+                        <label>
+                            <span>Event types</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul class="scrolling-menu">
+                            <li ng-repeat="(i, type) in eventsData.types">
+                                <label title="{{type.label}}">
+                                    <span class="hide-overflow">{{type.label}}</span>
+                                    <input type="checkbox"
+                                      ng-checked="menuOptions.view.eventTypes.indexOf(type.id) >= 0"
+                                      ng-click="toggleEventType(type.id)">
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="ui-menu-view-legend">
+                        <label>
+                            <span>Legend</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.view.legend"
+                              ng-click="setMenuOptions({view:{legend:!menuOptions.view.legend}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-view-horizontal-crosshair">
+                        <label>
+                            <span>Horizontal crosshair</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.view.horizontalCrosshair"
+                              ng-click="setMenuOptions({view:{horizontalCrosshair:!menuOptions.view.horizontalCrosshair}})">
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <!-- end View -->
+
+            <!-- Y-Axis Menu -->
+            <li class="ui-menu-yaxis" ng-class="{'disabled': menuOptions.menuDisabled}" ng-show="datasetType !== DatasetTypes.EVENT_TABLE">
+                <label>
+                    <span>Y-axis</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <li class="ui-menu-yaxis-scaling">
+                        <label>
+                            <span>Scaling</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul>
+                            <li ng-class="{'disabled': datasetType !== DatasetTypes.ANALOG}" class="ui-menu-yaxis-scaling-auto">
+                                <label>
+                                    <span>Auto</span>
+                                    <input type="radio"
+                                      ng-checked="menuOptions.yAxis.scaling.type == 'auto'"
+                                      ng-click="setMenuOptions({yAxis:{scaling:{type:'auto'}}})">
+                                </label>
+                            </li>
+                            <li ng-class="{'disabled': datasetType !== DatasetTypes.ANALOG || menuOptions.selectedLimitsIndex == undefined || metadata[menuOptions.selectedLimitsIndex].Limits.Yellow.Low == undefined}" class="ui-menu-yaxis-scaling-yellow-limits">
+                                <label>
+                                    <span>Scale to yellow limits</span>
+                                    <input type="radio"
+                                      ng-disabled="menuOptions.selectedLimitsIndex == undefined || metadata[menuOptions.selectedLimitsIndex].Limits.Yellow.Low == undefined"
+                                      ng-checked="menuOptions.yAxis.scaling.type == 'yellow'"
+                                      ng-click="setMenuOptions({yAxis:{scaling:{type:'yellow'}}})">
+                                </label>
+                            </li>
+                            <li ng-class="{'disabled': datasetType !== DatasetTypes.ANALOG || menuOptions.selectedLimitsIndex == undefined || metadata[menuOptions.selectedLimitsIndex].Limits.Red.Low == undefined}" class="ui-menu-yaxis-scaling-red-limits">
+                                <label>
+                                    <span>Scale to red limits</span>
+                                    <input type="radio"
+                                      ng-disabled="menuOptions.selectedLimitsIndex == undefined || metadata[menuOptions.selectedLimitsIndex].Limits.Red.Low == undefined"
+                                      ng-checked="menuOptions.yAxis.scaling.type == 'red'"
+                                      ng-click="setMenuOptions({yAxis:{scaling:{type:'red'}}})">
+                                </label>
+                            </li>
+                            <li ng-class="{'disabled': datasetType !== DatasetTypes.ANALOG}" class="ui-menu-yaxis-scaling-custom">
+                                <label>
+                                    <span>Custom Scaling</span>
+                                    <input type="radio"
+                                      ng-disabled="datasetType === DatasetTypes.DISCRETE"
+                                      ng-checked="menuOptions.yAxis.scaling.type == 'custom'"
+                                      ng-click="setMenuOptions({yAxis:{scaling:{type:'custom'}}})">
+                                </label>
+                            </li>
+                            <!-- Input fields for custom limits -->
+                            <li ng-class="{ 'disabled': menuOptions.yAxis.scaling.type !=='custom' }" class="ui-menu-yaxis-scaling-custom-inputs">
+                                <label>
+                                    <div class="half-label">
+                                        <span>Low:</span>
+                                        <input style="width: 4em;
+                                          max-width: 50%"
+                                          type="number"
+                                          ng-model="menuControls.yAxisScalingLow">
+                                    </div>
+                                    <div class="half-label">
+                                        <span>High:</span>
+                                        <input style="width: 4em;
+                                          max-width: 50%"
+                                          type="number"
+                                          ng-model="menuControls.yAxisScalingHigh">
+                                    </div>
+
+                                </label>
+                            </li>
+                            <li ng-class="{ 'disabled': menuOptions.yAxis.scaling.type !== 'custom' }">
+                                <label class="y-axis-scaling">
+                                    <div class="text-danger-light scaling-error">{{ yAxisScalingError }}</div>
+                                    <button class="btn btn-primary" ng-click="setMenuOptions({yAxis:{scaling:{low:menuControls.yAxisScalingLow,high:menuControls.yAxisScalingHigh}}})">Apply</button>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="ui-menu-yaxis-labels">
+                        <label>
+                            <span>Labels</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul>
+                            <li ng-class="{'disabled': datasetType !== DatasetTypes.DISCRETE}">
+                                <label>
+                                    <span>Hide unused discrete labels</span>
+                                    <input type="checkbox"
+                                      ng-checked="menuOptions.yAxis.labels.hideUnusedDiscreteLabels"
+                                      ng-click="setMenuOptions({yAxis:{labels:{hideUnusedDiscreteLabels: !menuOptions.yAxis.labels.hideUnusedDiscreteLabels}}})"
+                                      ng-disabled="datasetType !== DatasetTypes.DISCRETE">
+                                </label>
+                            </li>
+                            <li ng-class="{'disabled': datasetType !== DatasetTypes.DISCRETE || !discreteFormattersEnabled}">
+                                <label>
+                                    <span>Show numeric discrete values</span>
+                                    <input type="checkbox"
+                                      ng-checked="menuOptions.yAxis.labels.showNumericDiscreteValues"
+                                      ng-click="setMenuOptions({yAxis:{labels:{showNumericDiscreteValues: !menuOptions.yAxis.labels.showNumericDiscreteValues}}})"
+                                      ng-disabled="datasetType !== DatasetTypes.DISCRETE || !discreteFormattersEnabled">
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <!-- end Y-Axis Menu -->
+
+            <!-- X-Axis Options Menu -->
+            <li class="ui-menu-date-formatting" ng-class="{'disabled': menuOptions.menuDisabled}">
+                <label>
+                    <span ng-if="datasetType !== DatasetTypes.EVENT_TABLE">X-axis labels</span>
+                    <span ng-if="datasetType === DatasetTypes.EVENT_TABLE">Date formatting</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <li class="ui-menu-date-formatting-auto">
+                        <label>
+                            <span>Auto</span>
+                            <input type="radio"
+                              ng-checked="menuOptions.timeLabels.format === 'auto'"
+                              ng-click="setMenuOptions({timeLabels:{format:'auto'}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-date-formatting-t0">
+                        <label>
+                            <span>Seconds since t<sub>0</sub></span>
+                            <input type="radio"
+                              ng-checked="menuOptions.timeLabels.format === 'secondsSinceT0'"
+                              ng-click="setMenuOptions({timeLabels:{format:'secondsSinceT0'}})">
+                        </label>
+                    </li>
+                    <li class="ui-menu-date-formatting-raw">
+                        <label>
+                            <span>Raw</span>
+                            <input type="radio"
+                              ng-checked="menuOptions.timeLabels.format === 'raw'"
+                              ng-click="setMenuOptions({timeLabels:{format:'raw'}})">
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <!-- end X-axis labels -->
+
+            <!-- Data Display Menu -->
+            <li class="ui-menu-data-display" ng-show="datasetType !== DatasetTypes.EVENT_TABLE" ng-class="{'disabled': menuOptions.menuDisabled}">
+                <label>
+                    <span>Data display</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <li class="ui-menu-data-display-series">
+                        <label>
+                            <span>Display series as</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul>
+                            <li>
+                                <label>
+                                    <span>Lines only</span>
+                                    <input type="radio"
+                                      ng-checked="menuOptions.dataDisplay.seriesDisplayMode === 'lines'"
+                                      ng-click="setMenuOptions({dataDisplay:{seriesDisplayMode:'lines'}})">
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <span>Points only</span>
+                                    <input type="radio"
+                                      ng-checked="menuOptions.dataDisplay.seriesDisplayMode === 'points'"
+                                      ng-click="setMenuOptions({dataDisplay:{seriesDisplayMode:'points'}})">
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <span>Lines and points</span>
+                                    <input type="radio"
+                                      ng-checked="menuOptions.dataDisplay.seriesDisplayMode === 'linesAndPoints'"
+                                      ng-click="setMenuOptions({dataDisplay:{seriesDisplayMode:'linesAndPoints'}})">
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="ui-menu-data-display-gaps">
+                        <label>
+                            <span>Gaps</span>
+                            <div class="arrow"></div>
+                        </label>
+                        <ul>
+                            <li>
+                                <label title="Visualize gaps in data as breaks in the line chart">
+                                    <span>Allow gaps</span>
+                                    <input type="checkbox"
+                                      ng-checked="menuOptions.dataDisplay.gaps.enabled"
+                                      ng-click="setMenuOptions({dataDisplay:{gaps:{enabled: !menuOptions.dataDisplay.gaps.enabled}}})">
+                                </label>
+                            </li>
+                            <li ng-class="{ 'disabled': !menuOptions.dataDisplay.gaps.enabled }">
+                                <label title="For periods of data with an even cadence, if at least [threshold] consecutive points are missing, a gap will be shown">
+                                    <span>Threshold ratio</span>
+                                    <input class="gap-threshold-input"
+                                      type="number"
+                                      min="1"
+                                      ng-model="menuControls.gapThreshold">
+                                </label>
+                            </li>
+                            <li ng-class="{ 'disabled': !menuOptions.dataDisplay.gaps.enabled }">
+                                <label>
+                                    <button class="btn btn-primary" ng-click="setMenuOptions({dataDisplay:{gaps:{threshold: menuControls.gapThreshold}}})">Apply</button>
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="ui-menu-data-display-minmax-range" ng-class="{'disabled': datasetType === DatasetTypes.DISCRETE}">
+                        <label>
+                            <span>Show min/max range</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.dataDisplay.showMinMax"
+                              ng-click="setMenuOptions({dataDisplay:{showMinMax: !menuOptions.dataDisplay.showMinMax}})"
+                              ng-disabled="datasetType === DatasetTypes.DISCRETE">
+                        </label>
+                    </li>
+                    <li class="ui-menu-data-display-data-grouping">
+                        <label title="Automatic averaging and min/max calculations when more points are shown than can fit on the screen">
+                            <span>Data grouping</span>
+                            <input type="checkbox"
+                              ng-checked="menuOptions.dataDisplay.dataGrouping"
+                              ng-click="setMenuOptions({dataDisplay:{dataGrouping: !menuOptions.dataDisplay.dataGrouping}})"
+                              ng-disabled="datasetType === DatasetTypes.DISCRETE">
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <!-- end Data display -->
+            <li class="ui-menu-zoom-mode" ng-class="{'disabled': menuOptions.menuDisabled}" ng-show="datasetType !== DatasetTypes.EVENT_TABLE">
+                <label>
+                    <span>Zoom mode</span>
+                    <div class="arrow"></div>
+                </label>
+                <ul>
+                    <li>
+                        <label title="Drag the mouse to zoom in on a range of x-axis values">
+                            <span>X only</span>
+                            <input type="radio"
+                              ng-checked="menuOptions.zoomMode === 'x'"
+                              ng-click="setMenuOptions({zoomMode:'x'})">
+                        </label>
+                    </li>
+                    <li>
+                        <label title="Drag the mouse to zoom in on a specific rectangle">
+                            <span>X and Y</span>
+                            <input type="radio"
+                              ng-checked="menuOptions.zoomMode === 'xy'"
+                              ng-click="setMenuOptions({zoomMode:'xy'})">
+                        </label>
+                    </li>
+                </ul>
+            </li>
+            <!-- end Zooming -->
+
+            <li class="ui-menu-color-theme" ng-class="{'disabled': menuOptions.menuDisabled}">
+                 <label>
+                    <span>Color theme</span>
+                    <div class="arrow"></div>
+                 </label>
+                 <ul>
+                    <li>
+                        <label>
+                            <span>Light</span>
+                            <input type="radio"
+                              ng-checked="uiOptions.colorTheme === 'light'"
+                              ng-click="setUiOptions({colorTheme: 'light'})">
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <span>Dark</span>
+                            <input type="radio"
+                              ng-checked="uiOptions.colorTheme === 'dark'"
+                              ng-click="setUiOptions({colorTheme: 'dark'})">
+                        </label>
+                    </li>
+                 </ul>
+            </li>
+            <!-- end color theme -->
+        </ul>
+    </div>
+    <!-- End of Plot Options Menu -->
+
+    <!-- Chart -->
+    <div class="frame-contents" ng-show="dataError || loading" uib-collapse="uiOptions.collapsed">
+        <div class="overlay-container" ng-style="frameContentStyle">
+            <div ng-show="dataError == 'Server Error'">
+                <p>{{dataErrorString}}</p>
+                <div class="no-data-buttons">
+                    <button class="btn btn-primary" ng-click="downloadAllDatasets()">Retry</button>
+                </div>
+            </div>
+            <div ng-show="dataError == 'noData'">
+                <p>{{dataErrorString}}</p>
+                <div class="no-data-buttons" ng-show="noDataErrorKeys.length > 0 && datasets.length > noDataErrorKeys.length">
+                    <button class="btn btn-primary" ng-click="removeDatasets( noDataErrorKeys )">Remove empty dataset<span ng-if="noDataErrorKeys.length > 1">s</span> from plot</button>
+                    <button class="btn" ng-click="dataError = ''">Dismiss</button>
+                </div>
+            </div>
+            <div ng-show="loading">
+                <div class="loading-bar-wrapper">
+                    <div class="loading-bar-mask" style="width:{{100 - loadingProgress.percent}}%"></div>
+                    <div class="loading-kb">{{loadingProgress.kb}}kb</div>
+                </div>
+                <p>Retrieving data from server...</p>
+            </div>
+        </div>
+    </div>
+    <highchart
+      class="lasp-chart"
+      ng-show="!dataError && !loading && (datasetType === DatasetTypes.ANALOG || datasetType === DatasetTypes.DISCRETE)"
+      ng-class="{'chart-loading': loading}"
+      uib-collapse="uiOptions.collapsed"
+      chart="chart"
+      highchart-scope="highchartScope"
+      frame-scope="plotObj"
+      ng-dblclick="resetZoom();">
+    </highchart>
+    <event-table
+      ng-show="!dataError && !loading && datasetType === DatasetTypes.EVENT_TABLE"
+      ng-class="{'chart-loading': loading}"
+      uib-collapse="uiOptions.collapsed"
+      event-table-scope="eventTableScope"
+      frame-scope="plotObj">
+    </event-table>
+    <!-- End Chart -->
+
+    <!-- Small Format Buttons Menu -->
+    <span class="more-options-button" ng-click="setUiOptions({showBottomMenu: !uiOptions.showBottomMenu})" ng-if="elementWidth < 620 && !uiOptions.collapsed && !uiOptions.showBottomMenu" title="more options"><div class="arrow"></div></span>
+    <span class="more-options-button reverse" ng-click="setUiOptions({showBottomMenu: !uiOptions.showBottomMenu})" ng-if="elementWidth < 620 && !uiOptions.collapsed && uiOptions.showBottomMenu" title="less options"><div class="arrow"></span>
+    <div class="bottom-menu" ng-show="uiOptions.showBottomMenu && elementWidth < 620 && !uiOptions.collapsed">
+        <div class="flex-container-row">
+            <span class="flex"></span>
+            <div class="flex-nogrow header-button-group">
+                <div header-button-group class="button-group"></div>
+            </div>
+        </div>
+    </div>
+</div>
